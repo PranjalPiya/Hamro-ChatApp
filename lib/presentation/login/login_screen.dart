@@ -82,6 +82,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 40,
                     ),
                     CustomTextFormField(
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'required*';
+                          }
+                          return null;
+                        },
                         controller: _emailController,
                         hintText: 'Email',
                         obscure: false),
@@ -89,6 +95,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 20,
                     ),
                     CustomTextFormField(
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'required*';
+                          }
+                          return null;
+                        },
                         controller: _passwordController,
                         hintText: 'password',
                         obscure: false),

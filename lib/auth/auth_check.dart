@@ -1,6 +1,6 @@
 import 'package:chatapp/auth/login_or_register.dart';
 import 'package:chatapp/presentation/home_screen.dart';
-import 'package:chatapp/presentation/login_screen.dart';
+import 'package:chatapp/presentation/login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

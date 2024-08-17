@@ -6,10 +6,12 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscure;
+  final String? Function(String?)? validator;
   const CustomTextFormField(
       {super.key,
       required this.controller,
       required this.hintText,
+      required this.validator,
       required this.obscure});
 
   @override
@@ -20,6 +22,7 @@ class CustomTextFormField extends StatelessWidget {
           onTapOutside: (event) => FocusScope.of(context).unfocus(),
           controller: controller,
           obscureText: obscure,
+          validator: validator,
           decoration: InputDecoration(
             fillColor: Theme.of(context).colorScheme.secondary,
             filled: true,
