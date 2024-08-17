@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:chatapp/auth/auth_services.dart';
 import 'package:equatable/equatable.dart';
@@ -22,7 +24,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emitter.call(
             const SignUpFailedState(errorMsg: 'Password does not match!'));
       }
-      if (auth.credential!.token != null) {
+
+      if (auth.user!.uid.isNotEmpty) {
         emitter.call(const SignUpSuccessState(
           successMsg: 'User Registered Successfully',
         ));

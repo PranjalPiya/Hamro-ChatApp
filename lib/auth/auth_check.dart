@@ -15,7 +15,7 @@ class AuthCheck extends StatelessWidget {
         builder: (context, snapshot) {
           //if user logged in
           if (snapshot.hasData) {
-            return const HomeScreen();
+            return HomeScreen();
           } else {
             return const LoginOrRegister();
           }

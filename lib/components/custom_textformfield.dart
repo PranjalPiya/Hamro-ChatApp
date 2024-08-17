@@ -28,6 +28,10 @@ class CustomTextFormField extends StatelessWidget {
             filled: true,
             hintText: hintText,
             hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide:
+                    BorderSide(color: Theme.of(context).colorScheme.tertiary)),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide:
