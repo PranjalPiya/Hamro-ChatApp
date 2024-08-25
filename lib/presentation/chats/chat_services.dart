@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:chatapp/components/drawer.dart';
 import 'package:chatapp/model/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,7 +36,7 @@ class ChatServices {
       timestamp: currentTimeStamp,
     );
 
-    //creating chat room ID for the two users for unique convo room
+    //creating chat room ID for the two users for unique conversation room
     List<String> ids = [currentUserId, receiverId];
     ids.sort(); // sorting the ids so that the chatroomId is same for any 2 people.
     String chatRoomId = ids.join('_');
@@ -43,6 +45,18 @@ class ChatServices {
         .doc(chatRoomId)
         .collection('messages')
         .add(mainMessage.toMap());
+
     // get messages
+    Stream<QuerySnapshot> getMessages(String userId, otherUserId) {
+      //create a chatroom ID for the users
+      List<String> ids = [userId, otherUserId];
+      ids.sort(); // sorting the ids so that the chat
+      String chatRoomId = ids.join('_');
+      return _firebaseFirestore
+          .doc(chatRoomId)
+          .collection('chatRooms')
+          .orderBy('timestamp', descending: false)
+          .snapshots();
+    }
   }
 }
