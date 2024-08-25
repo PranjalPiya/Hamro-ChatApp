@@ -1,3 +1,4 @@
+import 'package:chatapp/components/drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -17,6 +18,9 @@ class ChatServices {
       }).toList();
     });
   }
+
+// Get current user from Firestore
+
   //send message
 
   // get messages

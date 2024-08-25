@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:chatapp/auth/auth_services.dart';
 import 'package:chatapp/auth/bloc/auth_bloc.dart';
 import 'package:chatapp/components/custom_logout.dart';
+import 'package:chatapp/components/drawer.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +19,22 @@ class HomeScreen extends StatelessWidget {
 
   //get instance of auth service
   final authService = AuthServices();
+  final chatService = ChatServices();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: appDrawer(
+          context: context,
+          onTap: () {
+            logoutComponent(
+              context: context,
+              onPressed: () {
+                logout();
+                Navigator.of(context).pop();
+              },
+            );
+          }),
       appBar: AppBar(
         title: const Text('Home'),
         actions: [

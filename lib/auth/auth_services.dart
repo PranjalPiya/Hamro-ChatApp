@@ -17,6 +17,7 @@ class AuthServices {
     try {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: email!, password: password!);
+      credential.user!.updateDisplayName(username);
       _firebaseFirestore.collection('Users').doc(credential.user!.uid).set({
         'uid': credential.user!.uid,
         'username': username,

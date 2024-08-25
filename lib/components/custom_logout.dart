@@ -28,5 +28,5 @@ void logoutComponent({BuildContext? context, void Function()? onPressed}) {
                   )),
             ],
           )),
-      barrierDismissible: false);
+      barrierDismissible: true);
 }
