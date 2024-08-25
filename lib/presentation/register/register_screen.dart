@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chatapp/auth/bloc/auth_bloc.dart';
 import 'package:chatapp/components/custom_button.dart';
 import 'package:chatapp/components/custom_textformfield.dart';
@@ -22,12 +20,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _usernameController.dispose();
     super.dispose();
   }
 
@@ -52,6 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               }
               if (state is SignUpSuccessState) {
                 Navigator.of(context).pop();
+
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('${state.successMsg}')));
               }
@@ -84,6 +85,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(
                         height: 40,
+                      ),
+                      CustomTextFormField(
+                        controller: _usernameController,
+                        hintText: 'Username',
+                        obscure: false,
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'Cannot be empty';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
                       ),
                       CustomTextFormField(
                         controller: _emailController,
@@ -141,6 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     password: _passwordController.text.trim(),
                                     confirmPassword:
                                         _confirmPasswordController.text.trim(),
+                                    userName: _usernameController.text.trim(),
                                   ),
                                 );
                           }

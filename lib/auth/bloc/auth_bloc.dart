@@ -19,7 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emitter.call(SignUpLoadingState());
       final auth = await authServices.signUpWithEmailPassword(
-          event.email, event.password);
+          event.email, event.password, event.userName);
       if (event.password != event.confirmPassword) {
         emitter.call(
             const SignUpFailedState(errorMsg: 'Password does not match!'));

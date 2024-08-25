@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Container(
           decoration: BoxDecoration(
-              color: Theme.of(context!).colorScheme.secondary,
+              color: Theme.of(context!).colorScheme.tertiary,
               borderRadius: BorderRadius.circular(10)),
           child: ListTile(
             leading: Icon(
@@ -78,7 +78,11 @@ class HomeScreen extends StatelessWidget {
               size: 24,
               color: Theme.of(context).colorScheme.inversePrimary,
             ),
-            title: Text('${user['email']}'),
+            title: Text('${user['username']}'),
+            subtitle: Text(
+              '${user['email']}',
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
           ),
         ),
       );

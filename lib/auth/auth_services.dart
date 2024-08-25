@@ -13,12 +13,13 @@ class AuthServices {
 
 // sign up
   Future<UserCredential> signUpWithEmailPassword(
-      String? email, String? password) async {
+      String? email, String? password, String? username) async {
     try {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: email!, password: password!);
       _firebaseFirestore.collection('Users').doc(credential.user!.uid).set({
         'uid': credential.user!.uid,
+        'username': username,
         'email': credential.user!.email,
       });
       return credential;
