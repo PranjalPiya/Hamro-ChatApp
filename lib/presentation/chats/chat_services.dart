@@ -45,18 +45,18 @@ class ChatServices {
         .doc(chatRoomId)
         .collection('messages')
         .add(mainMessage.toMap());
+  }
 
-    // get messages
-    Stream<QuerySnapshot> getMessages(String userId, otherUserId) {
-      //create a chatroom ID for the users
-      List<String> ids = [userId, otherUserId];
-      ids.sort(); // sorting the ids so that the chat
-      String chatRoomId = ids.join('_');
-      return _firebaseFirestore
-          .doc(chatRoomId)
-          .collection('chatRooms')
-          .orderBy('timestamp', descending: false)
-          .snapshots();
-    }
+  // get messages
+  Stream<QuerySnapshot> getMessages({String? userId, otherUserId}) {
+    //create a chatroom ID for the users
+    List<String> ids = [userId!, otherUserId];
+    ids.sort(); // sorting the ids so that the chat
+    String chatRoomId = ids.join('_');
+    return _firebaseFirestore
+        .doc(chatRoomId)
+        .collection('chatRooms')
+        .orderBy('timestamp', descending: false)
+        .snapshots();
   }
 }

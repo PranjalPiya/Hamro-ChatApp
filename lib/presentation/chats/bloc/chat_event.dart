@@ -18,3 +18,12 @@ final class SendMessageEvent extends ChatEvent {
   @override
   List<Object> get props => [receiverId, newMessage];
 }
+
+final class GetMessageEvent extends ChatEvent {
+  final String receiverId;
+  final String senderId;
+
+  const GetMessageEvent({required this.receiverId, required this.senderId});
+  @override
+  List<Object> get props => [receiverId, senderId];
+}

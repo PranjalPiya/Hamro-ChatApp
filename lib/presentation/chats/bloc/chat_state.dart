@@ -58,6 +58,18 @@ final class SendMessageFailedState extends ChatState {
 //get chat message
 final class GetMessageLoadingState extends ChatState {}
 
-final class GetMessageSuccessState extends ChatState {}
+final class GetMessageSuccessState extends ChatState {
+  final List<Map<String, dynamic>> getMsg;
 
-final class GetMessageFailedState extends ChatState {}
+  const GetMessageSuccessState({required this.getMsg});
+  @override
+  List<Object> get props => [getMsg];
+}
+
+final class GetMessageFailedState extends ChatState {
+  final String errMsg;
+
+  const GetMessageFailedState({required this.errMsg});
+  @override
+  List<Object> get props => [errMsg];
+}
