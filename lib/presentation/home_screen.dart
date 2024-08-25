@@ -6,6 +6,7 @@ import 'package:chatapp/components/custom_logout.dart';
 import 'package:chatapp/components/drawer.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
+import 'package:chatapp/presentation/chats/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -83,20 +84,28 @@ class HomeScreen extends StatelessWidget {
     if (user!['email'] != authService.getCurrentUser()!.email) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context!).colorScheme.tertiary,
-              borderRadius: BorderRadius.circular(10)),
-          child: ListTile(
-            leading: Icon(
-              Icons.person,
-              size: 24,
-              color: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            title: Text('${user['username']}'),
-            subtitle: Text(
-              '${user['email']}',
-              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => ChatScreen(
+                      title: '${user['username']}',
+                    )));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Theme.of(context!).colorScheme.tertiary,
+                borderRadius: BorderRadius.circular(10)),
+            child: ListTile(
+              leading: Icon(
+                Icons.person,
+                size: 24,
+                color: Theme.of(context).colorScheme.inversePrimary,
+              ),
+              title: Text('${user['username']}'),
+              subtitle: Text(
+                '${user['email']}',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
             ),
           ),
         ),
