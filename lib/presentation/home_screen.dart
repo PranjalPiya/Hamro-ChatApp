@@ -7,6 +7,7 @@ import 'package:chatapp/components/drawer.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
 import 'package:chatapp/presentation/chats/screens/chat_screen.dart';
+import 'package:chatapp/theme/bloc/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,6 +26,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.tertiary,
       drawer: appDrawer(
           context: context,
           onTap: () {
@@ -38,19 +40,6 @@ class HomeScreen extends StatelessWidget {
           }),
       appBar: AppBar(
         title: const Text('Home'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                logoutComponent(
-                  context: context,
-                  onPressed: () {
-                    logout();
-                    Navigator.of(context).pop();
-                  },
-                );
-              },
-              icon: const Icon(Icons.logout)),
-        ],
       ),
       body: BlocProvider(
         create: (context) => ChatBloc(ChatServices())..add(LoadAllUsersEvent()),
@@ -83,7 +72,7 @@ class HomeScreen extends StatelessWidget {
   Widget usersDisplayTile({BuildContext? context, Map<String, dynamic>? user}) {
     if (user!['email'] != authService.getCurrentUser()!.email) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
@@ -95,7 +84,7 @@ class HomeScreen extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-                color: Theme.of(context!).colorScheme.tertiary,
+                color: Theme.of(context!).colorScheme.background,
                 borderRadius: BorderRadius.circular(10)),
             child: ListTile(
               leading: Icon(
@@ -106,7 +95,8 @@ class HomeScreen extends StatelessWidget {
               title: Text('${user['username']}'),
               subtitle: Text(
                 '${user['email']}',
-                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary),
               ),
             ),
           ),

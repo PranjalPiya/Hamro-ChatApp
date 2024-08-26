@@ -5,10 +5,14 @@ import 'package:chatapp/auth/auth_services.dart';
 import 'package:chatapp/components/custom_textformfield.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
+import 'package:chatapp/theme/bloc/theme_cubit.dart';
+import 'package:chatapp/theme/dark_theme.dart';
+import 'package:chatapp/theme/light_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class ChatScreen extends StatefulWidget {
   final String? receiverEmail;
@@ -29,9 +33,9 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _sendMsgController = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final chatService = ChatServices();
+
   @override
   void dispose() {
-    // TODO: implement dispose
     _sendMsgController.clear();
     super.dispose();
   }
@@ -40,12 +44,32 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.receiverUsername}'),
+        // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        leading: InkWell(
+          radius: 20,
+          onTap: () => Navigator.of(context).pop(),
+          child: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            // color: Theme.of(context).colorScheme.tertiary,
+          ),
+        ),
+        title: Text(
+          '${widget.receiverUsername}'.toUpperCase(),
+          style: const TextStyle(
+              // color: Theme.of(context).colorScheme.tertiary,
+              letterSpacing: 2,
+              fontSize: 20,
+              fontWeight: FontWeight.w600),
+        ),
       ),
       body: Column(
         children: [
           Expanded(
-            child: showUsersMessages(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: showUsersMessages(),
+            ),
           ),
           messageSendingContainer(
               receiverId: widget.receiverId,
@@ -55,7 +79,32 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  String readDate(Timestamp dateTime) {
+    DateTime date = dateTime.toDate(); // Convert Timestamp to DateTime
+    DateTime now = DateTime.now(); // Get the current date and time
+
+    // Check if the date is today
+    if (DateFormat('yyyy-MM-dd').format(date) ==
+        DateFormat('yyyy-MM-dd').format(now)) {
+      // If it's today, return the time in '11:00 AM/PM' format
+      return DateFormat('hh:mm a').format(date);
+    }
+
+    // Check if the date is yesterday
+    if (DateFormat('yyyy-MM-dd').format(date) ==
+        DateFormat('yyyy-MM-dd')
+            .format(now.subtract(const Duration(days: 1)))) {
+      // If it's yesterday, return 'Yesterday 10:00 AM/PM'
+      return 'Yesterday ${DateFormat('hh:mm a').format(date)}';
+    }
+
+    // If it's a previous date, return the day and time in 'SUN 10:00 AM/PM' format
+    return DateFormat('EEE hh:mm a').format(date);
+  }
+
   Widget showUsersMessages() {
+    final bool isDarkMode =
+        context.watch<ThemeCubit>().currentTheme == darkMode;
     return BlocProvider(
       create: (context) => ChatBloc(ChatServices())
         ..add(GetMessageEvent(
@@ -77,24 +126,41 @@ class _ChatScreenState extends State<ChatScreen> {
               itemCount: state.getMsg.length,
               itemBuilder: (context, index) {
                 final getMsgDetail = state.getMsg[index];
-                // log('$Date');
+                // log(readDate(getMsgDetail['timestamp']));
                 bool isCurrentUser =
                     getMsgDetail['senderId'] == auth.currentUser!.uid;
-                final alignment = isCurrentUser
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft;
+
                 return Column(
                   crossAxisAlignment: isCurrentUser
                       ? CrossAxisAlignment.end
                       : CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${getMsgDetail['message']}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
                     Container(
-                        decoration: const BoxDecoration(color: Colors.red),
-                        child: Text('${getMsgDetail['timestamp']}'))
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: isCurrentUser
+                              ? Colors.green
+                              : Theme.of(context).colorScheme.primary),
+                      child: Text(
+                        '${getMsgDetail['message']}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode
+                                ? Theme.of(context).colorScheme.inversePrimary
+                                : Theme.of(context).colorScheme.tertiary),
+                      ),
+                    ),
+                    Text(
+                      readDate(getMsgDetail['timestamp']),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 12),
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
                   ],
                 );
               },
@@ -108,6 +174,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget messageSendingContainer(
       {String? receiverId, TextEditingController? sendMessageController}) {
+    final bool isDarkMode =
+        context.watch<ThemeCubit>().currentTheme == darkMode;
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         return Padding(
@@ -141,7 +209,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   icon: Icon(
                     Icons.arrow_upward,
                     size: 25,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: isDarkMode
+                        ? Theme.of(context).colorScheme.inversePrimary
+                        : Theme.of(context).colorScheme.secondary,
                   ),
                   onPressed: sendMessageController.text.isEmpty
                       ? null
