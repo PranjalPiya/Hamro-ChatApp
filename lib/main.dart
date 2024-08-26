@@ -5,6 +5,7 @@ import 'package:chatapp/auth/login_or_register.dart';
 import 'package:chatapp/firebase_options.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
+import 'package:chatapp/theme/bloc/theme_cubit.dart';
 import 'package:chatapp/theme/light_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +31,18 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChatBloc>(
           create: (context) => ChatBloc(ChatServices()),
         ),
+        BlocProvider(
+          create: (context) => ThemeCubit(),
+        ),
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: lightMode,
-        home: const AuthCheck(),
+      child: BlocBuilder<ThemeCubit, bool>(
+        builder: (context, state) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: context.read<ThemeCubit>().currentTheme,
+            home: const AuthCheck(),
+          );
+        },
       ),
     );
   }

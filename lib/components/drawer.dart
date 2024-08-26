@@ -1,4 +1,5 @@
 import 'package:chatapp/auth/auth_services.dart';
+import 'package:chatapp/presentation/settings/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 final authServices = AuthServices();
@@ -39,6 +40,8 @@ Widget appDrawer({BuildContext? context, void Function()? onTap}) {
               ),
             )),
         ListTile(
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const SettingScreen())),
           title: Text(
             'S E T T I N G',
             style: TextStyle(
