@@ -54,8 +54,9 @@ class ChatServices {
     ids.sort(); // sorting the ids so that the chat
     String chatRoomId = ids.join('_');
     return _firebaseFirestore
-        .doc(chatRoomId)
         .collection('chatRooms')
+        .doc(chatRoomId)
+        .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots();
   }
