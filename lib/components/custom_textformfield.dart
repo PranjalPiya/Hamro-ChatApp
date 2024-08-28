@@ -12,9 +12,15 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscure;
   final String? Function(String?)? validator;
   final Function(String)? onChanged;
+  final int? maxLines;
+  final int? minLines;
+  final FocusNode? focusNode;
   const CustomTextFormField(
       {super.key,
       this.onChanged,
+      this.maxLines,
+      this.minLines,
+      this.focusNode,
       required this.controller,
       required this.hintText,
       required this.validator,
@@ -30,9 +36,11 @@ class CustomTextFormField extends StatelessWidget {
           controller: controller,
           obscureText: obscure,
           validator: validator,
-          maxLines: null, // Allows the text field to expand vertically
+          focusNode: focusNode,
+          //use only for sending message
+          maxLines: maxLines, // Allows the text field to expand vertically
           minLines: 1, // Starts with a single line
-          keyboardType: TextInputType.multiline,
+          // keyboardType: TextInputType.multiline,
           onChanged: onChanged,
           decoration: InputDecoration(
             fillColor: Theme.of(context).colorScheme.secondary,

@@ -5,6 +5,8 @@ import 'package:chatapp/auth/auth_services.dart';
 import 'package:chatapp/components/custom_textformfield.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
+import 'package:chatapp/presentation/chats/widgets/send_message.dart';
+import 'package:chatapp/presentation/chats/widgets/show_messages.dart';
 import 'package:chatapp/theme/bloc/theme_cubit.dart';
 import 'package:chatapp/theme/dark_theme.dart';
 import 'package:chatapp/theme/light_theme.dart';
@@ -33,10 +35,34 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _sendMsgController = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final chatService = ChatServices();
+  final FocusNode focusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    focusNode.addListener(() {
+      Future.delayed(
+        const Duration(milliseconds: 500),
+        () => scrollDown(),
+      );
+    });
+
+    //
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () => scrollDown(),
+    );
+  }
+
+  void scrollDown() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+  }
 
   @override
   void dispose() {
     _sendMsgController.clear();
+
     super.dispose();
   }
 
@@ -68,10 +94,20 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: showUsersMessages(),
+              child: showUsersMessages(
+                  auth: auth,
+                  context: context,
+                  receiverId: widget.receiverId,
+                  scrollController: _scrollController),
             ),
           ),
           messageSendingContainer(
+              context: context,
+              onChanged: (p0) {
+                setState(() {
+                  _sendMsgController.text = p0;
+                });
+              },
               receiverId: widget.receiverId,
               sendMessageController: _sendMsgController),
         ],
@@ -79,154 +115,74 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  String readDate(Timestamp dateTime) {
-    DateTime date = dateTime.toDate(); // Convert Timestamp to DateTime
-    DateTime now = DateTime.now(); // Get the current date and time
+  // Widget showUsersMessages() {
+  //   final bool isDarkMode =
+  //       context.watch<ThemeCubit>().currentTheme == darkMode;
+  //   return BlocProvider(
+  //     create: (context) => ChatBloc(ChatServices())
+  //       ..add(GetMessageEvent(
+  //           receiverId: widget.receiverId!, senderId: auth.currentUser!.uid)),
+  //     child: BlocBuilder<ChatBloc, ChatState>(
+  //       builder: (context, state) {
+  //         if (state is GetMessageLoadingState) {
+  //           return const Center(child: CircularProgressIndicator());
+  //         }
+  //         if (state is GetMessageFailedState) {
+  //           log(state.errMsg);
+  //           return Center(
+  //             child: Text(state.errMsg),
+  //           );
+  //         }
+  //         if (state is GetMessageSuccessState) {
+  //           return ListView.builder(
+  //             controller: _scrollController,
+  //             shrinkWrap: true,
+  //             itemCount: state.getMsg.length,
+  //             itemBuilder: (context, index) {
+  //               final getMsgDetail = state.getMsg[index];
+  //               // log(readDate(getMsgDetail['timestamp']));
+  //               bool isCurrentUser =
+  //                   getMsgDetail['senderId'] == auth.currentUser!.uid;
 
-    // Check if the date is today
-    if (DateFormat('yyyy-MM-dd').format(date) ==
-        DateFormat('yyyy-MM-dd').format(now)) {
-      // If it's today, return the time in '11:00 AM/PM' format
-      return DateFormat('hh:mm a').format(date);
-    }
-
-    // Check if the date is yesterday
-    if (DateFormat('yyyy-MM-dd').format(date) ==
-        DateFormat('yyyy-MM-dd')
-            .format(now.subtract(const Duration(days: 1)))) {
-      // If it's yesterday, return 'Yesterday 10:00 AM/PM'
-      return 'Yesterday ${DateFormat('hh:mm a').format(date)}';
-    }
-
-    // If it's a previous date, return the day and time in 'SUN 10:00 AM/PM' format
-    return DateFormat('EEE hh:mm a').format(date);
-  }
-
-  Widget showUsersMessages() {
-    final bool isDarkMode =
-        context.watch<ThemeCubit>().currentTheme == darkMode;
-    return BlocProvider(
-      create: (context) => ChatBloc(ChatServices())
-        ..add(GetMessageEvent(
-            receiverId: widget.receiverId!, senderId: auth.currentUser!.uid)),
-      child: BlocBuilder<ChatBloc, ChatState>(
-        builder: (context, state) {
-          if (state is GetMessageLoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is GetMessageFailedState) {
-            log(state.errMsg);
-            return Center(
-              child: Text(state.errMsg),
-            );
-          }
-          if (state is GetMessageSuccessState) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: state.getMsg.length,
-              itemBuilder: (context, index) {
-                final getMsgDetail = state.getMsg[index];
-                // log(readDate(getMsgDetail['timestamp']));
-                bool isCurrentUser =
-                    getMsgDetail['senderId'] == auth.currentUser!.uid;
-
-                return Column(
-                  crossAxisAlignment: isCurrentUser
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: isCurrentUser
-                              ? Colors.green
-                              : Theme.of(context).colorScheme.primary),
-                      child: Text(
-                        '${getMsgDetail['message']}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isDarkMode
-                                ? Theme.of(context).colorScheme.inversePrimary
-                                : Theme.of(context).colorScheme.tertiary),
-                      ),
-                    ),
-                    Text(
-                      readDate(getMsgDetail['timestamp']),
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 12),
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-          return const SizedBox();
-        },
-      ),
-    );
-  }
-
-  Widget messageSendingContainer(
-      {String? receiverId, TextEditingController? sendMessageController}) {
-    final bool isDarkMode =
-        context.watch<ThemeCubit>().currentTheme == darkMode;
-    return BlocBuilder<ChatBloc, ChatState>(
-      builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0, right: 7),
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomTextFormField(
-                    onChanged: (p0) {
-                      setState(() {
-                        sendMessageController.text = p0;
-                      });
-                    },
-                    validator: (p0) {
-                      if (p0!.isEmpty) {
-                        return 'required*';
-                      }
-                      return null;
-                    },
-                    controller: sendMessageController!,
-                    hintText: 'Send a Message...',
-                    obscure: false),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: sendMessageController.text.isEmpty
-                        ? Theme.of(context).colorScheme.primary
-                        : Colors.green),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_upward,
-                    size: 25,
-                    color: isDarkMode
-                        ? Theme.of(context).colorScheme.inversePrimary
-                        : Theme.of(context).colorScheme.secondary,
-                  ),
-                  onPressed: sendMessageController.text.isEmpty
-                      ? null
-                      : () {
-                          context.read<ChatBloc>().add(SendMessageEvent(
-                              receiverId: receiverId!,
-                              newMessage: sendMessageController.text.trim()));
-                          sendMessageController.clear();
-                        },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  //               return Column(
+  //                 crossAxisAlignment: isCurrentUser
+  //                     ? CrossAxisAlignment.end
+  //                     : CrossAxisAlignment.start,
+  //                 children: [
+  //                   Container(
+  //                     padding: const EdgeInsets.symmetric(
+  //                         horizontal: 15, vertical: 8),
+  //                     decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                         color: isCurrentUser
+  //                             ? Colors.green
+  //                             : Theme.of(context).colorScheme.primary),
+  //                     child: Text(
+  //                       '${getMsgDetail['message']}',
+  //                       style: TextStyle(
+  //                           // fontWeight: FontWeight.bold,
+  //                           color: isDarkMode
+  //                               ? Theme.of(context).colorScheme.inversePrimary
+  //                               : Theme.of(context).colorScheme.tertiary),
+  //                     ),
+  //                   ),
+  //                   Text(
+  //                     readDate(getMsgDetail['timestamp']),
+  //                     style: TextStyle(
+  //                         color: Theme.of(context).colorScheme.primary,
+  //                         fontSize: 12),
+  //                   ),
+  //                   const SizedBox(
+  //                     height: 7,
+  //                   ),
+  //                 ],
+  //               );
+  //             },
+  //           );
+  //         }
+  //         return const SizedBox();
+  //       },
+  //     ),
+  //   );
+  // }
 }

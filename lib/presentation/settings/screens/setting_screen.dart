@@ -9,8 +9,24 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.tertiary,
       appBar: AppBar(
-        title: const Text('S E T T I N G'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
+          'S E T T I N G',
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.tertiary,
+              fontWeight: FontWeight.w400),
+        ),
+        leading: InkWell(
+          radius: 20,
+          onTap: () => Navigator.of(context).pop(),
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
+        ),
       ),
       body: Column(
         children: [

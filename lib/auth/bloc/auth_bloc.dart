@@ -42,12 +42,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emitter.call(SignInLoadingState());
       final auth = await authServices.signInWithEmailAndPassword(
           event.email!, event.password!);
-      if (auth.user!.email!.isNotEmpty) {
-        emitter.call(SignInSuccessState(
-            successMsg: 'Login Successfully', userCredential: auth.user!));
-      } else {
-        emitter.call(const SignInFailedState(errorMsg: 'Error while logging!'));
-      }
+      // if (auth.user!.email!.isNotEmpty) {
+      emitter.call(SignInSuccessState(
+          successMsg: 'Login Successfully', userCredential: auth.user!));
+      // } else {
+      //   emitter.call(const SignInFailedState(errorMsg: 'Error while logging!'));
+      // }
     } catch (e) {
       emitter.call(SignInFailedState(errorMsg: '$e'));
     }

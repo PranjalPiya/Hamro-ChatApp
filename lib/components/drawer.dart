@@ -20,8 +20,12 @@ Widget appDrawer({BuildContext? context, void Function()? onTap}) {
                   ),
                   const SizedBox(height: 7),
                   Text(
-                    authServices.getCurrentUser()?.displayName?.toUpperCase() ??
-                        'U S E R',
+                    authServices.getCurrentUser()?.displayName == '' ||
+                            authServices.getCurrentUser()!.displayName == null
+                        ? ' U S E R'
+                        : authServices.getCurrentUser()!.displayName!,
+                    // authServices.getCurrentUser()?.displayName?.toUpperCase() ??
+                    // 'U S E R',
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: 15,
