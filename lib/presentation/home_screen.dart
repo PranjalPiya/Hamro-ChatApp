@@ -8,6 +8,8 @@ import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
 import 'package:chatapp/presentation/chats/screens/chat_screen.dart';
 import 'package:chatapp/theme/bloc/theme_cubit.dart';
+import 'package:chatapp/theme/dark_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,14 +24,17 @@ class HomeScreen extends StatelessWidget {
   //get instance of auth service
   final authService = AuthServices();
   final chatService = ChatServices();
-
+  final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode =
+        context.watch<ThemeCubit>().currentTheme == darkMode;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       drawer: appDrawer(
           context: context,
           onTap: () {
+            // log('${auth.currentUser!.displayName}');
             logoutComponent(
               context: context,
               onPressed: () {
@@ -39,7 +44,23 @@ class HomeScreen extends StatelessWidget {
             );
           }),
       appBar: AppBar(
-        title: const Text('Home'),
+        iconTheme: IconThemeData(
+          color: isDarkMode
+              ? Theme.of(context).colorScheme.inversePrimary
+              : Theme.of(context).colorScheme.tertiary,
+        ),
+        backgroundColor: isDarkMode
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.primary,
+        centerTitle: true,
+        title: Text(
+          'Home',
+          style: TextStyle(
+              color: isDarkMode
+                  ? Theme.of(context).colorScheme.inversePrimary
+                  : Theme.of(context).colorScheme.tertiary,
+              fontWeight: FontWeight.w400),
+        ),
       ),
       body: BlocProvider(
         create: (context) => ChatBloc(ChatServices())..add(LoadAllUsersEvent()),
