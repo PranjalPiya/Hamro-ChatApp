@@ -1,20 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
 
-import 'package:chatapp/auth/auth_services.dart';
-import 'package:chatapp/components/custom_textformfield.dart';
-import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
 import 'package:chatapp/presentation/chats/widgets/send_message.dart';
 import 'package:chatapp/presentation/chats/widgets/show_messages.dart';
-import 'package:chatapp/theme/bloc/theme_cubit.dart';
-import 'package:chatapp/theme/dark_theme.dart';
-import 'package:chatapp/theme/light_theme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class ChatScreen extends StatefulWidget {
   final String? receiverEmail;
@@ -80,6 +70,9 @@ class _ChatScreenState extends State<ChatScreen> {
             // color: Theme.of(context).colorScheme.tertiary,
           ),
         ),
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+        ],
         title: Text(
           '${widget.receiverUsername}'.toUpperCase(),
           style: const TextStyle(
@@ -102,6 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           messageSendingContainer(
+              scrollController: _scrollController,
               context: context,
               onChanged: (p0) {
                 setState(() {

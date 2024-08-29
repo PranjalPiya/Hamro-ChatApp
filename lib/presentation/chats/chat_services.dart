@@ -60,4 +60,12 @@ class ChatServices {
         .orderBy('timestamp', descending: false)
         .snapshots();
   }
+
+//block users
+
+//report users
+
+//unblock users
+
+//get users after blocking users
 }

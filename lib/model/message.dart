@@ -10,6 +10,8 @@ class Message {
   final String senderEmail;
   final String message;
   final Timestamp timestamp;
+  //for read and seen message we gotta add extra field.
+
   Message({
     required this.senderId,
     required this.receiverId,
