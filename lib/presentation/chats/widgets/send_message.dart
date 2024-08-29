@@ -9,6 +9,7 @@ Widget messageSendingContainer(
     {String? receiverId,
     TextEditingController? sendMessageController,
     Function(String)? onChanged,
+    ScrollController? scrollController,
     BuildContext? context}) {
   final bool isDarkMode = context!.watch<ThemeCubit>().currentTheme == darkMode;
   return BlocBuilder<ChatBloc, ChatState>(
@@ -48,6 +49,10 @@ Widget messageSendingContainer(
                 onPressed: sendMessageController.text.isEmpty
                     ? null
                     : () {
+                        scrollController!.animateTo(
+                            scrollController.position.maxScrollExtent,
+                            duration: const Duration(seconds: 1),
+                            curve: Curves.fastOutSlowIn);
                         context.read<ChatBloc>().add(SendMessageEvent(
                             receiverId: receiverId!,
                             newMessage: sendMessageController.text.trim()));
