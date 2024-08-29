@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:chatapp/auth/auth_services.dart';
+import 'package:chatapp/core/auth/auth_services.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';

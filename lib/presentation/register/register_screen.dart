@@ -1,4 +1,4 @@
-import 'package:chatapp/auth/bloc/auth_bloc.dart';
+import 'package:chatapp/core/auth/bloc/auth_bloc.dart';
 import 'package:chatapp/components/custom_button.dart';
 import 'package:chatapp/components/custom_textformfield.dart';
 import 'package:flutter/gestures.dart';
