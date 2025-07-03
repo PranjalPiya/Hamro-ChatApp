@@ -1,4 +1,4 @@
-import 'package:chatapp/auth/login_or_register.dart';
+import 'package:chatapp/core/auth/login_or_register.dart';
 import 'package:chatapp/presentation/home_screen.dart';
 import 'package:chatapp/presentation/login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';

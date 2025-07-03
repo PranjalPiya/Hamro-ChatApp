@@ -1,7 +1,7 @@
 import 'package:chatapp/components/custom_textformfield.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
-import 'package:chatapp/theme/bloc/theme_cubit.dart';
-import 'package:chatapp/theme/dark_theme.dart';
+import 'package:chatapp/core/theme/bloc/theme_cubit.dart';
+import 'package:chatapp/core/theme/dark_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

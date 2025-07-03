@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
-import 'package:chatapp/theme/bloc/theme_cubit.dart';
-import 'package:chatapp/theme/dark_theme.dart';
+import 'package:chatapp/core/theme/bloc/theme_cubit.dart';
+import 'package:chatapp/core/theme/dark_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
