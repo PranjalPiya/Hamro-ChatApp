@@ -1,14 +1,14 @@
 import 'dart:developer';
 
-import 'package:chatapp/auth/auth_services.dart';
-import 'package:chatapp/auth/bloc/auth_bloc.dart';
+import 'package:chatapp/core/auth/auth_services.dart';
+import 'package:chatapp/core/auth/bloc/auth_bloc.dart';
 import 'package:chatapp/components/custom_logout.dart';
 import 'package:chatapp/components/drawer.dart';
 import 'package:chatapp/presentation/chats/bloc/chat_bloc.dart';
 import 'package:chatapp/presentation/chats/chat_services.dart';
 import 'package:chatapp/presentation/chats/screens/chat_screen.dart';
-import 'package:chatapp/theme/bloc/theme_cubit.dart';
-import 'package:chatapp/theme/dark_theme.dart';
+import 'package:chatapp/core/theme/bloc/theme_cubit.dart';
+import 'package:chatapp/core/theme/dark_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

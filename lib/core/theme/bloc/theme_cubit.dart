@@ -1,5 +1,5 @@
-import 'package:chatapp/theme/dark_theme.dart';
-import 'package:chatapp/theme/light_theme.dart';
+import 'package:chatapp/core/theme/dark_theme.dart';
+import 'package:chatapp/core/theme/light_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
